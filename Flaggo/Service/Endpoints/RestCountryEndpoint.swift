@@ -49,6 +49,7 @@ public enum RestCountryEndpoint: Endpoint {
 
     
     case all([Field])
+    case countryDetails(String, [Field])
     
     public var urlScheme: String {
         "https"
@@ -62,12 +63,16 @@ public enum RestCountryEndpoint: Endpoint {
         switch self {
         case .all:
             return "/v3.1/all"
+        case .countryDetails(let country, _):
+            return "/v3.1/\(country)"
         }
     }
     
     public var queryItems: [URLQueryItem] {
         switch self {
         case .all(let fields):
+            return [.init(name: "fields", value: fields.reduce("", { $0.isEmpty ? $1.rawValue : "\($0),\($1.rawValue)" }))]
+        case .countryDetails(_, let fields):
             return [.init(name: "fields", value: fields.reduce("", { $0.isEmpty ? $1.rawValue : "\($0),\($1.rawValue)" }))]
         }
     }

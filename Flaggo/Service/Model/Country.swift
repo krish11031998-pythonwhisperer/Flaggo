@@ -11,4 +11,6 @@ public struct Country: Decodable {
     public let flags: Flag?
     public let flag: String?
     public let name: Name?
+    public let capital: [String]?
+    public let region: String?
 }
