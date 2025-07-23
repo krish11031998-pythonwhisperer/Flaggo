@@ -1,0 +1,15 @@
+{
+  "originHash" : "5954f36ac0474ea78312430d84db1b33aa8038f83ae15c1210643283c92023d0",
+  "pins" : [
+    {
+      "identity" : "kkit-swift-package",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krish11031998-pythonwhisperer/KKit-Swift-Package",
+      "state" : {
+        "revision" : "6d9989a60af53aa400a6400968f07ece99619daa",
+        "version" : "2.4.2"
+      }
+    }
+  ],
+  "version" : 3
+}
