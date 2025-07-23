@@ -29,6 +29,7 @@ public struct CountryInfoGridBox    : ConfigurableView {
                 .foregroundStyle(.primary)
         }
         .groupBoxStyle(InfoGroupBoxStyle())
+        .dynamicTypeSize(..<DynamicTypeSize.large)
     }
     
     public static var viewName: String { "CountryInfoView" }
@@ -42,7 +43,7 @@ public struct CountryInfoGridBox    : ConfigurableView {
             .padding(.trailing, 10)
             .aspectRatio(1.25, contentMode: .fit)
             .frame(maxWidth: .infinity, alignment: .leading)
-        CountryInfoGridBox(model: .init(title: "Native Name", info: "Icelandeds"))
+        CountryInfoGridBox(model: .init(title: "Native Name", info: "Icelandeds Icelandeds"))
             .padding(.leading, 10)
             .padding(.trailing, 20)
             .aspectRatio(1.25, contentMode: .fit)

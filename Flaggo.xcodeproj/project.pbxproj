@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC5923022E3101BE004827BE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = BC5923012E3101BE004827BE /* Kingfisher */; };
 		EF676FAE2E2FF8CC0089D6D3 /* KKit in Frameworks */ = {isa = PBXBuildFile; productRef = EF676FAD2E2FF8CC0089D6D3 /* KKit */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC5923022E3101BE004827BE /* Kingfisher in Frameworks */,
 				EF676FAE2E2FF8CC0089D6D3 /* KKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +86,7 @@
 			name = Flaggo;
 			packageProductDependencies = (
 				EF676FAD2E2FF8CC0089D6D3 /* KKit */,
+				BC5923012E3101BE004827BE /* Kingfisher */,
 			);
 			productName = Flaggo;
 			productReference = EF676F872E2FE6670089D6D3 /* Flaggo.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				EF676FAC2E2FF8CC0089D6D3 /* XCRemoteSwiftPackageReference "KKit-Swift-Package" */,
+				BC5923002E3101BE004827BE /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EF676F882E2FE6670089D6D3 /* Products */;
@@ -348,6 +352,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		BC5923002E3101BE004827BE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.5.0;
+			};
+		};
 		EF676FAC2E2FF8CC0089D6D3 /* XCRemoteSwiftPackageReference "KKit-Swift-Package" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krish11031998-pythonwhisperer/KKit-Swift-Package";
@@ -359,6 +371,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		BC5923012E3101BE004827BE /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BC5923002E3101BE004827BE /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		EF676FAD2E2FF8CC0089D6D3 /* KKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EF676FAC2E2FF8CC0089D6D3 /* XCRemoteSwiftPackageReference "KKit-Swift-Package" */;

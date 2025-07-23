@@ -10,7 +10,7 @@ import KKit
 import SwiftUI
 import Combine
 
-class ViewController: UIViewController {
+class CountryListViewController: UIViewController {
 
     private lazy var collectionView: DiffableCollectionView = .init()
     private let viewModel: CountryViewModel
@@ -30,16 +30,13 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.addSubview(collectionView)
         collectionView.fillSuperview()
-        setupBindings()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         viewModel.fetchCountries(refresh: false)
+        setupBindings()
     }
     
     private func setupBindings() {
         viewModel.$countries
+            .dropFirst(1)
             .withUnretained(self)
             .sinkReceive { (vc, countries) in
                 let cells: [DiffableCollectionCellProvider] = countries.compactMap{ country in
@@ -47,10 +44,11 @@ class ViewController: UIViewController {
                     return DiffableCollectionItem<CountryCellView>(cellModel)
                 }
                 
-                let sectionLayout = NSCollectionLayoutSection.singleColumnLayout(width: .fractionalWidth(1.0), height: .estimated(54),
-                                                                                 insets: .section(.init(vertical: 16, horizontal: 20)))
+                let header = CollectionSupplementaryView<SectionHeader>(.init(title: "Countries", subtitle: "Explore the world"))
+                let sectionLayout = NSCollectionLayoutSection.gridLayout(itemSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalWidth(0.67)), groupSpacing: .fixed(8), interGroupSpacing: 12)
+                sectionLayout.addHeader()
                 #warning("Add section")
-                let section = DiffableCollectionSection(0, cells: cells, sectionLayout: sectionLayout)
+                let section = DiffableCollectionSection(0, cells: cells, header: header, sectionLayout: sectionLayout)
                 
                 vc.collectionView.reloadWithDynamicSection(sections: [section])
             }
