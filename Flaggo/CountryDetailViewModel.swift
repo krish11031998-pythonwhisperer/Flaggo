@@ -32,6 +32,19 @@ class CountryDetailViewModel {
                 await MainActor.run {
                     self.country = country
                 }
+            } catch let decodingError as DecodingError {
+                switch decodingError {
+                case .typeMismatch(let any, let context):
+                    print("typeMismatch: \(any) - \(context)")
+                case .valueNotFound(let any, let context):
+                    print("valueNotFound: \(any) - \(context)")
+                case .keyNotFound(let codingKey, let context):
+                    print("keyNotFound: \(codingKey) - \(context)")
+                case .dataCorrupted(let context):
+                    print("dataCorrupted:\(context)")
+                @unknown default:
+                    fatalError()
+                }
             } catch {
                 print("(ERROR) error: ", error.localizedDescription)
             }

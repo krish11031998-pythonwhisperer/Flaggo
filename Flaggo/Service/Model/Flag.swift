@@ -19,7 +19,7 @@ public struct Flag: Decodable {
     
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.png = try container.decode(String.self, forKey: .png)
+        self.png = try container.decodeIfPresent(String.self, forKey: .png) ?? ""
         self.svg = try container.decodeIfPresent(String.self, forKey: .svg) ?? nil
         self.description = try container.decodeIfPresent(String.self, forKey: .description) ?? nil
     }
