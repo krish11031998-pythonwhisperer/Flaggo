@@ -8,7 +8,7 @@
 import Foundation
 
 #warning("MAKE THIS A Protocol confirming Protocol")
-class CountryViewModel {
+class CountryListViewModel {
     
     @Published private(set) var countries: [Country] = []
     private var fetchCountryTask: Task<Void, Never>?
@@ -30,8 +30,10 @@ class CountryViewModel {
         
         fetchCountryTask = Task(priority: .userInitiated) {
             do {
-                self.countries = try await countryService.fetchAllConutries(fields: [.name, .flag, .flags])
-                print("(DEBUG) countries: ", countries)
+                let countries = try await countryService.fetchAllConutries(fields: [.name, .flag, .flags])
+                await MainActor.run {
+                    self.countries = countries
+                }
             } catch {
                 print("(ERROR) error: ", error.localizedDescription)
             }

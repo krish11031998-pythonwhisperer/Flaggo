@@ -11,20 +11,22 @@ import Kingfisher
 
 public struct CountryCellView: ConfigurableView {
     
-    public struct Config: Hashable {
+    public struct Config: ActionProvider, Hashable {
         public let name: String
         public let officialName: String
         public let countryFlag: String
         public let imageURL: String
+        public var action: Callback?
         
-        public init(name: String, officialName: String, countryFlag: String, imageURL: String) {
+        public init(name: String, officialName: String, countryFlag: String, imageURL: String, action: Callback?) {
             self.name = name
             self.officialName = officialName
             self.countryFlag = countryFlag
             self.imageURL = imageURL
+            self.action = action
         }
         
-        public init?(country: Country) {
+        public init?(country: Country, action: Callback?) {
             guard let name = country.name,
                   let flag = country.flag,
                   let flags = country.flags else { return nil }
@@ -32,6 +34,18 @@ public struct CountryCellView: ConfigurableView {
             self.officialName = name.official
             self.countryFlag = flag
             self.imageURL = flags.png
+            self.action = action
+        }
+        
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(name)
+            hasher.combine(officialName)
+            hasher.combine(countryFlag)
+            hasher.combine(imageURL)
+        }
+        
+        public static func == (lhs: Config, rhs: Config) -> Bool {
+            return lhs.name == rhs.name && lhs.officialName == rhs.officialName && lhs.countryFlag == rhs.countryFlag && lhs.imageURL == rhs.imageURL
         }
     }
     

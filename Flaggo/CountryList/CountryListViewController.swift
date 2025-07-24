@@ -13,7 +13,7 @@ import Combine
 class CountryListViewController: UIViewController {
 
     private lazy var collectionView: DiffableCollectionView = .init()
-    private let viewModel: CountryViewModel
+    private let viewModel: CountryListViewModel
     private var cancellables: Set<AnyCancellable> = .init()
     
     init(countryService: CountryService) {
@@ -40,7 +40,10 @@ class CountryListViewController: UIViewController {
             .withUnretained(self)
             .sinkReceive { (vc, countries) in
                 let cells: [DiffableCollectionCellProvider] = countries.compactMap{ country in
-                    guard let cellModel = CountryCellView.Model(country: country) else { return nil }
+                    let cellModel = CountryCellView.Model(country: country) { [weak vc] in
+                        vc?.presentDetailsScreen(country: country)
+                    }
+                    guard let cellModel else { return nil }
                     return DiffableCollectionItem<CountryCellView>(cellModel)
                 }
                 
@@ -53,6 +56,12 @@ class CountryListViewController: UIViewController {
                 vc.collectionView.reloadWithDynamicSection(sections: [section])
             }
             .store(in: &cancellables)
+    }
+    
+    private func presentDetailsScreen(country: Country) {
+        guard let name = country.name else { return }
+        let viewController = CountryDetailViewController(name: name.common, countryDetailService: RestCountryDetailService())
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     deinit {
