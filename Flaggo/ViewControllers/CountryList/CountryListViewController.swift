@@ -27,38 +27,61 @@ class CountryListViewController: RootViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         view.addSubview(collectionView)
         collectionView.fillSuperview()
-        viewModel.fetchCountries(refresh: false)
+        view.backgroundColor = .systemBackground
+        collectionView.backgroundColor = .clear
         setupBindings()
+        fetchCountries()
     }
     
     private func setupBindings() {
         viewModel.$countries
             .dropFirst(1)
+            .receive(on: DispatchQueue.main)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.activityIndicator.stopAnimating()
+            })
             .withUnretained(self)
             .sinkReceive { (vc, countries) in
-                let cells: [DiffableCollectionCellProvider] = countries.compactMap{ country in
-                    let cellModel = CountryCellView.Model(country: country) { [weak vc] in
-                        vc?.presentDetailsScreen(country: country)
-                    }
-                    guard let cellModel else { return nil }
-                    return DiffableCollectionItem<CountryCellView>(cellModel)
-                }
-                
-                let header = CollectionSupplementaryView<SectionHeader>(.init(title: "Countries", subtitle: "Explore the world"))
-                let sectionLayout = NSCollectionLayoutSection.gridLayout(itemSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalWidth(0.67)), groupSpacing: .fixed(8), interGroupSpacing: 12)
-                sectionLayout.addHeader()
-                #warning("Add section")
-                let section = DiffableCollectionSection(0, cells: cells, header: header, sectionLayout: sectionLayout)
-                
-                vc.collectionView.reloadWithDynamicSection(sections: [section])
+                vc.collectionView.reloadWithDynamicSection(sections: vc.setupCountriesSection(countries: countries))
             }
             .store(in: &cancellables)
     }
     
-    private func presentDetailsScreen(country: Country) {
+    
+    // MARK: - Fetch
+    
+    private func fetchCountries() {
+        activityIndicator.startAnimating()
+        viewModel.fetchCountries(refresh: false)
+    }
+    
+    
+    // MARK: - Collection Setup
+    
+    private func setupCountriesSection(countries: [Country]) -> [DiffableCollectionSection] {
+        let cells: [DiffableCollectionCellProvider] = countries.compactMap{ country in
+            let cellModel = CountryCellView.Model(country: country) { [weak self] in
+                self?.pushDetailsScreen(country: country)
+            }
+            guard let cellModel else { return nil }
+            return DiffableCollectionItem<CountryCellView>(cellModel)
+        }
+        
+        let header = CollectionSupplementaryView<SectionHeader>(.init(title: "Countries", subtitle: "Explore the world"))
+        let sectionLayout = NSCollectionLayoutSection.gridLayout(itemSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalWidth(0.67)), groupSpacing: .fixed(8), interGroupSpacing: 12)
+        sectionLayout.addHeader()
+        
+        let section = DiffableCollectionSection(0, cells: cells, header: header, sectionLayout: sectionLayout)
+        
+        return [section]
+    }
+    
+    
+    // MARK: - Navigation
+    
+    private func pushDetailsScreen(country: Country) {
         guard let name = country.name else { return }
         let viewController = CountryDetailViewController(name: name.common, countryDetailService: RestCountryDetailService())
         navigationController?.pushViewController(viewController, animated: true)

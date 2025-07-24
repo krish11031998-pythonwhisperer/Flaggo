@@ -7,7 +7,6 @@
 
 import Foundation
 
-#warning("MAKE THIS A Protocol confirming Protocol")
 class CountryListViewModel {
     
     @Published private(set) var countries: [Country] = []

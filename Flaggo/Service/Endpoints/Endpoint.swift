@@ -40,8 +40,6 @@ public extension Endpoint {
             throw URLError(.badURL)
         }
         
-        print("(DEBUG) url: ", urlRequest.url?.absoluteURL)
-        
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
         
         guard let httpResponse = response as? HTTPURLResponse,

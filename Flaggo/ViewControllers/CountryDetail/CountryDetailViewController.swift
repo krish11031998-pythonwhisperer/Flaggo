@@ -9,7 +9,7 @@ import Combine
 import UIKit
 import KKit
 
-class CountryDetailViewController: UIViewController {
+class CountryDetailViewController: BaseViewController {
     
     enum Section: Int {
         case countryHighlights = 0
@@ -37,12 +37,22 @@ class CountryDetailViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupBinding()
-        viewModel.fetchCountry()
+        fetchCountryDetails()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationItem.largeTitleDisplayMode = .never
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.contentInset.top = animatableImageView.frame.height + 20
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationItem.largeTitleDisplayMode = .automatic
     }
     
     private func setupView() {
@@ -53,6 +63,7 @@ class CountryDetailViewController: UIViewController {
             .pinHorizontalAnchorsTo(constant: 0)
         animatableImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.25).isActive = true
         
+        view.backgroundColor = .systemBackground
         view.addSubview(collectionView)
         collectionView.fillSuperview()
         collectionView.backgroundColor = .clear
@@ -62,6 +73,9 @@ class CountryDetailViewController: UIViewController {
         viewModel.$country
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.activityIndicator.stopAnimating()
+            })
             .withUnretained(self)
             .sinkReceive { (vc, country) in
                 let sections = vc.setupSections(country: country)
@@ -82,6 +96,13 @@ class CountryDetailViewController: UIViewController {
             .store(in: &cancellables)
     }
     
+    
+    // MARK: - Fetch Country Details
+    
+    private func fetchCountryDetails() {
+        activityIndicator.startAnimating()
+        viewModel.fetchCountry()
+    }
     
     // MARK: - Section Setup
     

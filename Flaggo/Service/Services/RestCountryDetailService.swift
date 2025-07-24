@@ -7,14 +7,13 @@
 
 import Foundation
 
-
 public protocol CountryDetailService {
-    func fetchDetailsOfCountry(for countryName: String, fields: [RestCountryEndpoint.Field]) async throws -> Country
+    func fetchDetailsOfCountry(for countryName: String, fields: [Field]) async throws -> Country
     func fetchAllDetailsOfCountry(for countryName: String) async throws -> Country
 }
 
 class RestCountryDetailService: CountryDetailService {
-    func fetchDetailsOfCountry(for countryName: String, fields: [RestCountryEndpoint.Field]) async throws -> Country {
+    func fetchDetailsOfCountry(for countryName: String, fields: [Field]) async throws -> Country {
         let countries: [Country] = try await RestCountryEndpoint.countryDetails(countryName, fields)
             .fetchRequest()
         
