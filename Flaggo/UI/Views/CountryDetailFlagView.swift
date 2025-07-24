@@ -33,9 +33,9 @@ public struct CountryDetailFlagView: ConfigurableView {
         HStack(alignment: .center, spacing: 16) {
             KFImage(.init(string: model.imagePath))
                 .resizable()
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: .fit)
                 .frame(width: 72, height: 72, alignment: .center)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipped()
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(model.commonName)

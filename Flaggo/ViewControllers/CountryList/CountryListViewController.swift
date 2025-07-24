@@ -10,7 +10,7 @@ import KKit
 import SwiftUI
 import Combine
 
-class CountryListViewController: UIViewController {
+class CountryListViewController: RootViewController {
 
     private lazy var collectionView: DiffableCollectionView = .init()
     private let viewModel: CountryListViewModel

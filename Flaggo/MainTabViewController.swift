@@ -40,10 +40,16 @@ class MainTabViewController: UITabBarController {
         
         let tabViewControllers = Tabs.allCases.map(setupTab(tab:))
         self.setViewControllers(tabViewControllers, animated: false)
+        
+        
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithDefaultBackground()
+        tabBar.standardAppearance = tabBarAppearance
+        tabBar.scrollEdgeAppearance = tabBarAppearance
     }
     
     private func setupTab(tab: Tabs) -> UIViewController {
-        let viewController: UIViewController
+        let viewController: RootViewController
         
         switch tab {
         case .countries:

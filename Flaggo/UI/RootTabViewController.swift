@@ -12,9 +12,10 @@ class RootTabViewController: UINavigationController {
     
     private let tabType: MainTabViewController.Tabs
     
-    init(tab: MainTabViewController.Tabs, rootViewController: UIViewController) {
+    init(tab: MainTabViewController.Tabs, rootViewController: RootViewController) {
         self.tabType = tab
         super.init(rootViewController: rootViewController)
+        rootViewController.tabType = tab
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -24,6 +25,14 @@ class RootTabViewController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabBarItem()
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = .systemBackground
+        
+        navigationBar.standardAppearance = appearance
+        navigationBar.compactAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
     }
 
     private func setupTabBarItem() {
