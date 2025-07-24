@@ -47,6 +47,16 @@ public extension Endpoint {
             throw URLError(.badServerResponse)
         }
         
-        return try JSONDecoder().decode(T.self, from: data)
+        do {
+            let data = try JSONDecoder().decode(T.self, from: data)
+            return data
+        } catch let decodingError as DecodingError {
+            #if DEBUG
+            print("(DECODING ERROR) decodingError: \(decodingError.localizedDescription)")
+            #endif
+            throw NetworkError.corruptedData
+        } catch {
+            throw NetworkError.failedToFetch
+        }
     }
 }

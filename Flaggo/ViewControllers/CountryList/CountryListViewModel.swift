@@ -9,7 +9,8 @@ import Foundation
 
 class CountryListViewModel {
     
-    @Published private(set) var countries: [Country] = []
+    @Published private(set) var countries: [Country]? = nil
+    @Published private(set) var error: Error? = nil
     private var fetchCountryTask: Task<Void, Never>?
     
     private let countryService: CountryService
@@ -30,11 +31,15 @@ class CountryListViewModel {
         fetchCountryTask = Task(priority: .userInitiated) {
             do {
                 let countries = try await countryService.fetchAllConutries(fields: [.name, .flag, .flags])
+                try Task.checkCancellation()
                 await MainActor.run {
                     self.countries = countries
                 }
+                
             } catch {
-                print("(ERROR) error: ", error.localizedDescription)
+                await MainActor.run {
+                    self.error = error
+                }
             }
         }
     }

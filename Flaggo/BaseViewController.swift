@@ -24,4 +24,9 @@ class BaseViewController: UIViewController {
             .pinCenterYAnchorTo(constant: 0)
     }
     
+    final func showErrorAlert(title: String, message: String) {
+        let alertViewController =  UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertViewController.addAction(.init(title: "OK", style: .default))
+        self.present(alertViewController, animated: true)
+    }
 }

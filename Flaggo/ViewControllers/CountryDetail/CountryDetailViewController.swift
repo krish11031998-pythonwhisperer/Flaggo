@@ -87,6 +87,20 @@ class CountryDetailViewController: BaseViewController {
             }
             .store(in: &cancellables)
         
+        viewModel.$error
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                guard let self else { return }
+                if self.activityIndicator.isAnimating {
+                    self.activityIndicator.stopAnimating()
+                }
+            })
+            .withUnretained(self)
+            .sinkReceive { (vc, error) in
+                vc.showErrorAlert(title: "Failed to fetch details of the country", message: error.localizedDescription)
+            }
+            .store(in: &cancellables)
         
         collectionView.publisher(for: \.contentOffset)
             .withUnretained(self)

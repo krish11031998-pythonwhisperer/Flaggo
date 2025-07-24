@@ -25,6 +25,9 @@ class CountryListViewController: RootViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(collectionView)
@@ -32,25 +35,52 @@ class CountryListViewController: RootViewController {
         view.backgroundColor = .systemBackground
         collectionView.backgroundColor = .clear
         setupBindings()
-        fetchCountries()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if viewModel.countries == nil {
+            fetchCountries()
+        }
+    }
+    
+    
+    // MARK: - Protected Methods
     
     private func setupBindings() {
         viewModel.$countries
-            .dropFirst(1)
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveOutput: { [weak self] _ in
-                self?.activityIndicator.stopAnimating()
+                guard let self else { return }
+                if self.activityIndicator.isAnimating {
+                    self.activityIndicator.stopAnimating()
+                }
             })
             .withUnretained(self)
             .sinkReceive { (vc, countries) in
                 vc.collectionView.reloadWithDynamicSection(sections: vc.setupCountriesSection(countries: countries))
             }
             .store(in: &cancellables)
+        
+        viewModel.$error
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                guard let self else { return }
+                if self.activityIndicator.isAnimating {
+                    self.activityIndicator.stopAnimating()
+                }
+            })
+            .withUnretained(self)
+            .sinkReceive { (vc, error) in
+                vc.showErrorAlert(title: "Failed to fetch list of countries", message: error.localizedDescription)
+            }
+            .store(in: &cancellables)
     }
     
     
-    // MARK: - Fetch
+    // MARK:  Fetch
     
     private func fetchCountries() {
         activityIndicator.startAnimating()
@@ -58,7 +88,7 @@ class CountryListViewController: RootViewController {
     }
     
     
-    // MARK: - Collection Setup
+    // MARK:  Collection Setup
     
     private func setupCountriesSection(countries: [Country]) -> [DiffableCollectionSection] {
         let cells: [DiffableCollectionCellProvider] = countries.compactMap{ country in
@@ -79,7 +109,7 @@ class CountryListViewController: RootViewController {
     }
     
     
-    // MARK: - Navigation
+    // MARK: Navigation
     
     private func pushDetailsScreen(country: Country) {
         guard let name = country.name else { return }
