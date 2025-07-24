@@ -13,7 +13,7 @@ public struct InfoGroupBoxStyle: GroupBoxStyle {
     public func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             configuration.label
-                .font(.body)
+                .font(.subheadline)
                 .fontWeight(.medium)
                 .foregroundStyle(.secondary)
             

@@ -18,6 +18,6 @@ public struct Country: Decodable {
     public let languages: [String:String]?
     public let currencies: [String:Currency]?
     public let demonyms: [String: Demonym]?
-    public let area: Int?
+    public let area: Double?
     public let population: Int?
 }

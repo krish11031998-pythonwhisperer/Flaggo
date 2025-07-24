@@ -8,11 +8,18 @@
 import KKit
 import SwiftUI
 
-public struct CountryInfoGridBox    : ConfigurableView {
+public struct CountryInfoGridBox: ConfigurableView {
     
     public struct Model: Hashable {
         let title: String
         let info: String
+        let font: Font
+        
+        public init(title: String, info: String, font: Font = .title) {
+            self.title = title
+            self.info = info
+            self.font = font
+        }
     }
     
     private let model: Model
@@ -24,7 +31,7 @@ public struct CountryInfoGridBox    : ConfigurableView {
     public var body: some View {
         GroupBox(model.title) {
             Text(model.info)
-                .font(.title)
+                .font(model.font)
                 .fontWeight(.semibold)
                 .foregroundStyle(.primary)
         }

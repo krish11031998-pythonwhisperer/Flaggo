@@ -8,6 +8,6 @@
 import Foundation
 
 public struct Currency: Decodable {
-    public let symbol: String
-    public let name: String
+    public let symbol: String?
+    public let name: String?
 }

@@ -18,7 +18,7 @@ public struct Demonym: Decodable {
     
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.female = try container.decode(String.self, forKey: .female)
-        self.male = try container.decode(String.self, forKey: .male)
+        self.female = try container.decodeIfPresent(String.self, forKey: .female) ?? "No Demonym for female"
+        self.male = try container.decodeIfPresent(String.self, forKey: .male) ?? "No Demonym for male"
     }
 }

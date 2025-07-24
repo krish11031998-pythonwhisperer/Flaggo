@@ -13,11 +13,13 @@ class CountryDetailViewController: UIViewController {
     
     enum Section: Int {
         case countryHighlights = 0
-        case countryInfo = 1
-        case flagAndCoatOfArms = 2
-        case people = 3
+        case languages = 1
+        case nativeNames = 2
+        case countryInfo = 3
+        case people = 4
     }
     
+    private lazy var animatableImageView: AnimatableImageView = .init()
     private lazy var collectionView: DiffableCollectionView = .init()
     private let viewModel: CountryDetailViewModel
     private var cancellables: Set<AnyCancellable> = .init()
@@ -38,9 +40,22 @@ class CountryDetailViewController: UIViewController {
         viewModel.fetchCountry()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.contentInset.top = animatableImageView.frame.height + 20
+    }
+    
     private func setupView() {
+        view.backgroundColor = .systemBackground
+        view.addSubview(animatableImageView)
+        animatableImageView
+            .pinTopAnchorTo(anchor: \.safeAreaLayoutGuide.topAnchor, constant: 0)
+            .pinHorizontalAnchorsTo(constant: 0)
+        animatableImageView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.25).isActive = true
+        
         view.addSubview(collectionView)
         collectionView.fillSuperview()
+        collectionView.backgroundColor = .clear
     }
     
     private func setupBinding() {
@@ -51,6 +66,18 @@ class CountryDetailViewController: UIViewController {
             .sinkReceive { (vc, country) in
                 let sections = vc.setupSections(country: country)
                 vc.collectionView.reloadWithDynamicSection(sections: sections)
+                
+                if let countryFlag = country.coatOfArms {
+                    vc.animatableImageView.setImage(imageURLPath: countryFlag.png)
+                }
+            }
+            .store(in: &cancellables)
+        
+        
+        collectionView.publisher(for: \.contentOffset)
+            .withUnretained(self)
+            .sinkReceive { (vc, contentOff) in
+                vc.animatableImageView.contentOffset = abs(min(0, contentOff.y)) - vc.collectionView.safeAreaInsets.top
             }
             .store(in: &cancellables)
     }
@@ -59,7 +86,11 @@ class CountryDetailViewController: UIViewController {
     // MARK: - Section Setup
     
     private func setupSections(country: Country) -> [DiffableCollectionSection] {
-        return [setupCountryHightlightSection(country: country), setupCountryInfoSection(country: country), setupCountryFlagAndCoatOfArms(country: country), setupPeopleSection(country: country)].compactMap { $0 }
+        return [setupCountryHightlightSection(country: country),
+                setupCountryLanguageSection(country: country),
+                setupNativeNamesSection(country: country),
+                setupCountryInfoSection(country: country),
+                setupPeopleSection(country: country)].compactMap { $0 }
     }
     
     
@@ -74,24 +105,71 @@ class CountryDetailViewController: UIViewController {
     }
     
     
+    // MARK: CountryLanguageSection
+    
+    private func setupCountryLanguageSection(country: Country) -> DiffableCollectionSection? {
+        guard let languages = country.languages, !languages.isEmpty else { return nil }
+        
+        let items = languages.map { (key: String, value: String) in
+            DiffableCollectionItem<ChipView>(.init(title: value.capitalized))
+        }
+        
+        let layout = NSCollectionLayoutSection.overflowLayout()
+        layout.contentInsets = .init(vertical: 16, horizontal: 20)
+        layout.addHeader()
+        
+        let header = CollectionSupplementaryView<SectionHeader>(.init(title: "Languages", subtitle: "Official languages spoken in the country"))
+        
+        return .init(Section.languages.rawValue, cells: items, header: header, sectionLayout: layout)
+    }
+    
+    
+    // MARK: Native Names
+    
+    private func setupNativeNamesSection(country: Country) -> DiffableCollectionSection? {
+        guard let nativeNames = country.name?.nativeName, let languages = country.languages else { return nil }
+        
+        let items: [DiffableCollectionCellProvider] = nativeNames.compactMap { (key: String, value: Name) in
+            guard let nameOfLanguage = languages[key] else { return nil }
+            
+            return DiffableCollectionItem<CountryInfoGridBox>(.init(title: nameOfLanguage, info: value.official, font: .headline))
+        }
+        
+        let layout = NSCollectionLayoutSection.singleRowLayout(width: .estimated(54), height: .estimated(54), insets: .section(.init(vertical: 16, horizontal: 20)))
+            .addHeader()
+        
+        let header = CollectionSupplementaryView<SectionHeader>(.init(title: "Native name", subtitle: "Native official names of the country"))
+        
+        return .init(Section.nativeNames.rawValue, cells: items, header: header, sectionLayout: layout)
+    }
+    
+    
     // MARK: CountryInfoSection
     
     private func setupCountryInfoSection(country: Country) -> DiffableCollectionSection? {
         var items: [DiffableCollectionCellProvider] = []
         
-        if let name = country.name {
-            items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Official Name", info: name.official)))
-        }
-        
         if let capital = country.capital?.first {
-            items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Capital", info: capital)))
+            items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Capital", info: capital, font: .headline)))
         }
         
         if let region = country.region {
-            items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Region", info: region)))
+            items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Region", info: region, font: .headline)))
         }
         
-        let sectionLayout = NSCollectionLayoutSection.threeItemGrid(insets: .init(vertical: 12, horizontal: 20))
+        if let subregion = country.subregion {
+            items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Sub-region", info: subregion, font: .headline)))
+        }
+        
+        if let area = country.area {
+            let measurementFormatter = MeasurementFormatter()
+            let measurement = Measurement(value: .init(area), unit: UnitArea.squareKilometers)
+            let areaString = measurementFormatter.string(from: measurement)
+            items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Area", info: areaString, font: .headline)))
+        }
+        
+        let sectionLayout = NSCollectionLayoutSection.gridLayout(itemSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(54)), groupSpacing: .fixed(8), interGroupSpacing: 8)
+        sectionLayout.contentInsets = .init(vertical: 16, horizontal: 20)
         sectionLayout.addHeader()
         
         let header = CollectionSupplementaryView<SectionHeader>(.init(title: "Regional Information", subtitle: "Information about the country"))
@@ -102,31 +180,24 @@ class CountryDetailViewController: UIViewController {
     }
     
     
-    // MARK: Country Flag & CoatOfArms
-    
-    private func setupCountryFlagAndCoatOfArms(country: Country) -> DiffableCollectionSection? {
-        guard let flags = country.flags, let coatOfArms = country.coatOfArms else { return nil }
-        
-        let imageModels: [ImageViewWithCaption.Model] = [.init(imagePath: flags.png, title: "Flag Description", caption: flags.description), .init(imagePath: coatOfArms.png, title: "Coat of Arms", caption: nil)]
-        
-        let items: [DiffableCollectionCellProvider] = imageModels.map { DiffableCollectionItem<ImageViewWithCaption>($0) }
-        
-        let layout = NSCollectionLayoutSection.gridLayout(itemSize: .init(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalWidth(0.7)), groupSpacing: .fixed(8), interGroupSpacing: 12)
-        
-        return .init(Section.flagAndCoatOfArms.rawValue, cells: items, sectionLayout: layout)
-    }
-    
-    
     // MARK: Country People
     
     private func setupPeopleSection(country: Country) -> DiffableCollectionSection? {
         
         guard let population = country.population, let demonyms = country.demonyms?["eng"] else { return nil }
         
-        let items: [DiffableCollectionCellProvider] = [DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Population", info: "\(population)")), DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Demonym (Female)", info: demonyms.female)), DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Demonym (Male)", info: demonyms.male))]
+        var items: [DiffableCollectionCellProvider] = []
+        
+        // Population
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        let populationString = numberFormatter.string(from: population as NSNumber) ?? "\(population)"
+        items.append(DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Population", info: populationString)))
+        
+        items.append(contentsOf: [DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Demonym (Female)", info: demonyms.female)), DiffableCollectionItem<CountryInfoGridBox>(.init(title: "Demonym (Male)", info: demonyms.male))])
         
         
-        let layout = NSCollectionLayoutSection.threeItemGrid(insets: .init(vertical: 12, horizontal: 20)).addHeader()
+        let layout = NSCollectionLayoutSection.threeItemGrid(insets: .init(vertical: 16, horizontal: 20)).addHeader()
         
         let header = CollectionSupplementaryView<SectionHeader>(.init(title: "Demographic", subtitle: "Information about the people in this country"))
 
