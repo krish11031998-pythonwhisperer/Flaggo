@@ -23,16 +23,9 @@ class RootTabViewController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavbar()
         setupTabBarItem()
     }
-    
-    private func setupNavbar() {
-        navigationItem.title = tabType.tabName
-        navigationBar.prefersLargeTitles = false
-//        navigationItem.largeTitleDisplayMode = .inline
-    }
-    
+
     private func setupTabBarItem() {
         self.tabBarItem = tabType.tabItem
     }
