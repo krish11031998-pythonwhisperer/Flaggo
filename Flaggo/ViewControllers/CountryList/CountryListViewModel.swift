@@ -1,5 +1,5 @@
 //
-//  CountryViewModel.swift
+//  CountryListViewModel.swift
 //  Flaggo
 //
 //  Created by Krishna Venkatramani on 22/07/2025.
