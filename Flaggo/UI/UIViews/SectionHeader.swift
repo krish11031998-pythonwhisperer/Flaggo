@@ -8,13 +8,13 @@
 import UIKit
 import KKit
 
-public class SectionHeader: UICollectionReusableView, ConfigurableCollectionSupplementaryView {
+ class SectionHeader: UICollectionReusableView, ConfigurableCollectionSupplementaryView {
     
-    public struct Model: Hashable {
+     struct Model: Hashable {
         let title: String
         let subtitle: String
         
-        public init(title: String, subtitle: String) {
+         init(title: String, subtitle: String) {
             self.title = title
             self.subtitle = subtitle
         }
@@ -34,7 +34,7 @@ public class SectionHeader: UICollectionReusableView, ConfigurableCollectionSupp
         return label
     }()
     
-    public override init(frame: CGRect) {
+     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
@@ -49,7 +49,7 @@ public class SectionHeader: UICollectionReusableView, ConfigurableCollectionSupp
         stackView.fillSuperview()
     }
 
-    public func configure(with model: Model) {
+     func configure(with model: Model) {
         titleLabel.text = model.title
         subtitleLabel.text = model.subtitle
     }

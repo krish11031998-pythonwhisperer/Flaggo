@@ -7,18 +7,13 @@
 
 import Foundation
 
-public protocol CountryDetailService {
-    func fetchDetailsOfCountry(for countryName: String, fields: [Field]) async throws -> Country
-    func fetchAllDetailsOfCountry(for countryName: String) async throws -> Country
-}
-
 class RestCountryDetailService: CountryDetailService {
     func fetchDetailsOfCountry(for countryName: String, fields: [Field]) async throws -> Country {
         let countries: [Country] = try await RestCountryEndpoint.countryDetails(countryName, fields)
             .fetchRequest()
         
         guard let country = countries.first else {
-            throw NSError(domain: "No Countries with the name: \(countryName) was found", code: -1100)
+            throw NetworkError.failedToFetch
         }
         
         return country
@@ -29,7 +24,7 @@ class RestCountryDetailService: CountryDetailService {
             .fetchRequest()
         
         guard let country = countries.first else {
-            throw NSError(domain: "No Countries with the name: \(countryName) was found", code: -1100)
+            throw NetworkError.failedToFetch
         }
         
         return country

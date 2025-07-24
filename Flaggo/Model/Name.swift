@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct Name: Decodable {
-    public let official: String
-    public let common: String
-    public let nativeName: [String : Name]?
+ struct Name: Decodable {
+     let official: String
+     let common: String
+     let nativeName: [String : Name]?
     
     enum CodingKeys: CodingKey {
         case official
@@ -18,7 +18,7 @@ public struct Name: Decodable {
         case nativeName
     }
     
-    public init(from decoder: any Decoder) throws {
+     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.official = try container.decodeIfPresent(String.self, forKey: .official) ?? "No Official Name"
         self.common = try container.decodeIfPresent(String.self, forKey: .common) ?? "No Common Name"

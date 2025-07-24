@@ -57,9 +57,9 @@ class CountryListViewController: RootViewController {
                     self.activityIndicator.stopAnimating()
                 }
             })
-            .withUnretained(self)
-            .sinkReceive { (vc, countries) in
-                vc.collectionView.reloadWithDynamicSection(sections: vc.setupCountriesSection(countries: countries))
+            .sinkReceive { [weak self] countries in
+                guard let self else { return }
+                self.collectionView.reloadWithDynamicSection(sections: self.setupCountriesSection(countries: countries))
             }
             .store(in: &cancellables)
         
@@ -72,9 +72,9 @@ class CountryListViewController: RootViewController {
                     self.activityIndicator.stopAnimating()
                 }
             })
-            .withUnretained(self)
-            .sinkReceive { (vc, error) in
-                vc.showErrorAlert(title: "Failed to fetch list of countries", message: error.localizedDescription)
+            .sinkReceive { [weak self] error in
+                guard let self else { return }
+                self.showErrorAlert(title: "Failed to fetch list of countries", message: error.localizedDescription)
             }
             .store(in: &cancellables)
     }

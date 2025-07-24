@@ -74,15 +74,16 @@ class CountryDetailViewController: BaseViewController {
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .handleEvents(receiveOutput: { [weak self] _ in
-                self?.activityIndicator.stopAnimating()
+                guard let self else { return }
+                self.activityIndicator.stopAnimating()
             })
-            .withUnretained(self)
-            .sinkReceive { (vc, country) in
-                let sections = vc.setupSections(country: country)
-                vc.collectionView.reloadWithDynamicSection(sections: sections)
+            .sinkReceive { [weak self] country in
+                guard let self else { return }
+                let sections = self.setupSections(country: country)
+                self.collectionView.reloadWithDynamicSection(sections: sections)
                 
                 if let countryFlag = country.coatOfArms {
-                    vc.animatableImageView.setImage(imageURLPath: countryFlag.png)
+                    self.animatableImageView.setImage(imageURLPath: countryFlag.png)
                 }
             }
             .store(in: &cancellables)
@@ -103,9 +104,9 @@ class CountryDetailViewController: BaseViewController {
             .store(in: &cancellables)
         
         collectionView.publisher(for: \.contentOffset)
-            .withUnretained(self)
-            .sinkReceive { (vc, contentOff) in
-                vc.animatableImageView.contentOffset = abs(min(0, contentOff.y)) - vc.collectionView.safeAreaInsets.top
+            .sinkReceive { [weak self] contentOff in
+                guard let self else { return }
+                self.animatableImageView.contentOffset = abs(min(0, contentOff.y)) - self.collectionView.safeAreaInsets.top
             }
             .store(in: &cancellables)
     }

@@ -9,16 +9,16 @@ import KKit
 import SwiftUI
 import Kingfisher
 
-public struct CountryCellView: ConfigurableView {
+ struct CountryCellView: ConfigurableView {
     
-    public struct Config: ActionProvider, Hashable {
-        public let name: String
-        public let officialName: String
-        public let countryFlag: String
-        public let imageURL: String
-        public var action: Callback?
+     struct Config: ActionProvider, Hashable {
+         let name: String
+         let officialName: String
+         let countryFlag: String
+         let imageURL: String
+         var action: Callback?
         
-        public init(name: String, officialName: String, countryFlag: String, imageURL: String, action: Callback?) {
+         init(name: String, officialName: String, countryFlag: String, imageURL: String, action: Callback?) {
             self.name = name
             self.officialName = officialName
             self.countryFlag = countryFlag
@@ -26,7 +26,7 @@ public struct CountryCellView: ConfigurableView {
             self.action = action
         }
         
-        public init?(country: Country, action: Callback?) {
+         init?(country: Country, action: Callback?) {
             guard let name = country.name,
                   let flag = country.flag,
                   let flags = country.flags else { return nil }
@@ -37,14 +37,14 @@ public struct CountryCellView: ConfigurableView {
             self.action = action
         }
         
-        public func hash(into hasher: inout Hasher) {
+         func hash(into hasher: inout Hasher) {
             hasher.combine(name)
             hasher.combine(officialName)
             hasher.combine(countryFlag)
             hasher.combine(imageURL)
         }
         
-        public static func == (lhs: Config, rhs: Config) -> Bool {
+         static func == (lhs: Config, rhs: Config) -> Bool {
             return lhs.name == rhs.name && lhs.officialName == rhs.officialName && lhs.countryFlag == rhs.countryFlag && lhs.imageURL == rhs.imageURL
         }
     }
@@ -52,11 +52,11 @@ public struct CountryCellView: ConfigurableView {
     @State private var size: CGSize = .zero
     private let config: Config
     
-    public init(model: Config) {
+     init(model: Config) {
         self.config = model
     }
     
-    public var body: some View {
+     var body: some View {
         VStack(alignment: .center, spacing: 12) {
             KFImage(.init(string: config.imageURL))
                 .resizable()
@@ -88,5 +88,5 @@ public struct CountryCellView: ConfigurableView {
     
     // MARK: - Configurable
     
-    public static var viewName: String { "CountryCellView" }
+     static var viewName: String { "CountryCellView" }
 }

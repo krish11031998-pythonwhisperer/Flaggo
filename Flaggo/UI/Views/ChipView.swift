@@ -8,14 +8,14 @@
 import SwiftUI
 import KKit
 
-public struct ChipView: ConfigurableView {
+ struct ChipView: ConfigurableView {
     
-    public struct Model: Hashable {
+     struct Model: Hashable {
         let title: String
         let foregroundColor: Color
         let backgroundColor: Color
         
-        public init(title: String, foregroundColor: Color = .primary, backgroundColor: Color = .init(uiColor: .secondarySystemFill)) {
+         init(title: String, foregroundColor: Color = .primary, backgroundColor: Color = .init(uiColor: .secondarySystemFill)) {
             self.title = title
             self.foregroundColor = foregroundColor
             self.backgroundColor = backgroundColor
@@ -24,11 +24,11 @@ public struct ChipView: ConfigurableView {
     
     private let model: Model
     
-    public init(model: Model) {
+     init(model: Model) {
         self.model = model
     }
     
-    public var body: some View {
+     var body: some View {
         Text(model.title)
             .font(.headline)
             .foregroundStyle(model.foregroundColor)
@@ -40,5 +40,5 @@ public struct ChipView: ConfigurableView {
             .clipShape(Capsule())
     }
     
-    public static var viewName: String { "ChipView" }
+     static var viewName: String { "ChipView" }
 }

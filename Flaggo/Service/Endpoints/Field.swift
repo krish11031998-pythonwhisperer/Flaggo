@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Field: String {
+ enum Field: String {
     case alpha2Code
     case alpha3Code
     case altSpellings

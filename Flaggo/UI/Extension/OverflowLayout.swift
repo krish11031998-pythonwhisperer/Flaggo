@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension NSCollectionLayoutSection {
+ extension NSCollectionLayoutSection {
     
     static func overflowLayout(interItemSpacing: CGFloat = 8, interGroupSpacing: CGFloat = 12) -> NSCollectionLayoutSection {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .estimated(54), heightDimension: .estimated(54)))

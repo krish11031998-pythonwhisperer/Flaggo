@@ -11,6 +11,7 @@ enum NetworkError: LocalizedError, Error {
     case corruptedData
     case failedToFetch
     case badUrl
+    case badResponse
     case noData
     
     var localizedDescription: String {
@@ -23,6 +24,8 @@ enum NetworkError: LocalizedError, Error {
             return "Invalid URL provided."
         case .noData:
             return "No data received from the server."
+        case .badResponse:
+            return "Bad response received from the server."
         }
     }
 }

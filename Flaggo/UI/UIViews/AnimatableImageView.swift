@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-public class AnimatableImageView: UIImageView {
+ class AnimatableImageView: UIImageView {
     
     private lazy var animator: UIViewPropertyAnimator = .init()
     private lazy var maskLayer: CAShapeLayer = {
@@ -17,7 +17,7 @@ public class AnimatableImageView: UIImageView {
         return layer
     }()
     
-    public var contentOffset: CGFloat = 0 {
+     var contentOffset: CGFloat = 0 {
         didSet {
             let pct = min(1 , max(0, contentOffset/(bounds.height)))
             animator.fractionComplete = 1 - pct
@@ -25,7 +25,7 @@ public class AnimatableImageView: UIImageView {
         }
     }
     
-    public init() {
+     init() {
         super.init(frame: .zero)
         self.contentMode = .scaleAspectFit
         setupAnimator()
@@ -36,7 +36,7 @@ public class AnimatableImageView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func layoutSubviews() {
+     override func layoutSubviews() {
         super.layoutSubviews()
         maskLayer.path = UIBezierPath(rect: bounds).cgPath
     }
@@ -53,9 +53,9 @@ public class AnimatableImageView: UIImageView {
     }
     
     
-    // MARK: - Public Methods
+    // MARK: -  Methods
     
-    public func setImage(imageURLPath: String) {
+     func setImage(imageURLPath: String) {
         KF.url(.init(string: imageURLPath))
             .fade(duration: 0.25)
             .placeholder(UIImage(systemName: "photo.fill"))

@@ -9,14 +9,14 @@ import SwiftUI
 import KKit
 import Kingfisher
 
-public struct CountryDetailFlagView: ConfigurableView {
+ struct CountryDetailFlagView: ConfigurableView {
     
-    public struct Model: Hashable {
+     struct Model: Hashable {
         let imagePath: String
         let commonName: String
         let officialName: String
         
-        public init(imagePath: String, commonName: String, officialName: String) {
+         init(imagePath: String, commonName: String, officialName: String) {
             self.imagePath = imagePath
             self.commonName = commonName
             self.officialName = officialName
@@ -25,11 +25,11 @@ public struct CountryDetailFlagView: ConfigurableView {
     
     private let model: Model
     
-    public init(model: Model) {
+     init(model: Model) {
         self.model = model
     }
     
-    public var body: some View {
+     var body: some View {
         HStack(alignment: .center, spacing: 16) {
             KFImage(.init(string: model.imagePath))
                 .resizable()
@@ -50,10 +50,10 @@ public struct CountryDetailFlagView: ConfigurableView {
         }
     }
     
-    public static var viewName: String { "CountryDetailFlagView" }
+     static var viewName: String { "CountryDetailFlagView" }
 }
 
 #Preview{
-    CountryDetailFlagView(model: .init(imagePath: "https://flagcdn.com/w320/md.png", commonName: "Moldova", officialName: "Republic of Moldova"))
+    CountryDetailFlagView(model: .init(imagePath: "https://flagcdn.com/w320/md.png", commonName: "Moldova", officialName: "Re of Moldova"))
         .padding(.horizontal, 20)
 }

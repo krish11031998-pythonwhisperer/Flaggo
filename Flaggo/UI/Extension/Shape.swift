@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public extension Shape where Self == RoundedRectangle {
+ extension Shape where Self == RoundedRectangle {
     static func roundedRect(cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous) -> RoundedRectangle {
         .init(cornerRadius: cornerRadius, style: style)
     }

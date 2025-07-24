@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-public struct InfoGroupBoxStyle: GroupBoxStyle {
+ struct InfoGroupBoxStyle: GroupBoxStyle {
     
-    public func makeBody(configuration: Configuration) -> some View {
+     func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             configuration.label
                 .font(.subheadline)

@@ -7,17 +7,17 @@
 
 import Foundation
 
-public struct Flag: Decodable {
-    public let png: String
-    public let svg: String?
-    public let description: String?
+ struct Flag: Decodable {
+     let png: String
+     let svg: String?
+     let description: String?
     
     
-    public enum CodingKeys: String, CodingKey {
+     enum CodingKeys: String, CodingKey {
         case png, svg, description = "alt"
     }
     
-    public init(from decoder: any Decoder) throws {
+     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.png = try container.decodeIfPresent(String.self, forKey: .png) ?? ""
         self.svg = try container.decodeIfPresent(String.self, forKey: .svg) ?? nil

@@ -8,7 +8,7 @@
 import UIKit
 import KKit
 
-public extension NSCollectionLayoutSection {
+ extension NSCollectionLayoutSection {
     
     static func threeItemGrid(insets: NSDirectionalEdgeInsets = .init(by: 8)) -> NSCollectionLayoutSection {
         let largeItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))

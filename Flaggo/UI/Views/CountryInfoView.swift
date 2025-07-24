@@ -8,14 +8,14 @@
 import KKit
 import SwiftUI
 
-public struct CountryInfoGridBox: ConfigurableView {
+ struct CountryInfoGridBox: ConfigurableView {
     
-    public struct Model: Hashable {
+     struct Model: Hashable {
         let title: String
         let info: String
         let font: Font
         
-        public init(title: String, info: String, font: Font = .title) {
+         init(title: String, info: String, font: Font = .title) {
             self.title = title
             self.info = info
             self.font = font
@@ -24,11 +24,11 @@ public struct CountryInfoGridBox: ConfigurableView {
     
     private let model: Model
     
-    public init(model: Model) {
+     init(model: Model) {
         self.model = model
     }
     
-    public var body: some View {
+     var body: some View {
         GroupBox(model.title) {
             Text(model.info)
                 .font(model.font)
@@ -39,7 +39,7 @@ public struct CountryInfoGridBox: ConfigurableView {
         .dynamicTypeSize(..<DynamicTypeSize.large)
     }
     
-    public static var viewName: String { "CountryInfoView" }
+     static var viewName: String { "CountryInfoView" }
 }
 
 

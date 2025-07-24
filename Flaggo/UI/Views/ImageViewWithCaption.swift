@@ -9,16 +9,16 @@ import Kingfisher
 import SwiftUI
 import KKit
 
-public struct ImageViewWithCaption: ConfigurableView {
+ struct ImageViewWithCaption: ConfigurableView {
     
     @State private var size: CGSize = .zero
     
-    public struct Model: Hashable {
+     struct Model: Hashable {
         let imagePath: String
         let title: String
         let caption: String?
     
-        public init(imagePath: String, title: String, caption: String?) {
+         init(imagePath: String, title: String, caption: String?) {
             self.imagePath = imagePath
             self.title = title
             self.caption = caption
@@ -27,11 +27,11 @@ public struct ImageViewWithCaption: ConfigurableView {
     
     private let model: Model
     
-    public init(model: Model) {
+     init(model: Model) {
         self.model = model
     }
     
-    public var body: some View {
+     var body: some View {
         ZStack(alignment: .bottom) {
             KFImage(.init(string: model.imagePath))
                 .resizable()
@@ -64,7 +64,7 @@ public struct ImageViewWithCaption: ConfigurableView {
         }
     }
     
-    public static var viewName: String { "ImageViewWithCaption" }
+     static var viewName: String { "ImageViewWithCaption" }
 }
 
 #Preview {

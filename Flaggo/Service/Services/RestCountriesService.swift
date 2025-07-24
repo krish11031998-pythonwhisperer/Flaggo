@@ -7,10 +7,6 @@
 
 import Foundation
 
-protocol CountryService {
-    func fetchAllConutries(fields: [Field]) async throws -> [Country]
-}
-
 class RestCountriesService: CountryService {
     
     func fetchAllConutries(fields: [Field]) async throws -> [Country] {

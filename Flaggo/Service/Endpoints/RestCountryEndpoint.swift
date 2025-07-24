@@ -7,20 +7,20 @@
 
 import Foundation
 
-public enum RestCountryEndpoint: Endpoint {    
+ enum RestCountryEndpoint: Endpoint {    
     case all([Field])
     case countryDetails(String, [Field])
     case countryAllDetails(String)
     
-    public var urlScheme: String {
+     var urlScheme: String {
         "https"
     }
     
-    public var host: String {
+     var host: String {
         "restcountries.com"
     }
     
-    public var path: String {
+     var path: String {
         switch self {
         case .all:
             return "/v3.1/all"
@@ -31,7 +31,7 @@ public enum RestCountryEndpoint: Endpoint {
         }
     }
     
-    public var queryItems: [URLQueryItem] {
+     var queryItems: [URLQueryItem] {
         switch self {
         case .all(let fields):
             return [.init(name: "fields", value: fields.reduce("", { $0.isEmpty ? $1.rawValue : "\($0),\($1.rawValue)" }))]
@@ -42,7 +42,7 @@ public enum RestCountryEndpoint: Endpoint {
         }
     }
     
-    public var urlCachePolicy: URLRequest.CachePolicy {
+     var urlCachePolicy: URLRequest.CachePolicy {
         .useProtocolCachePolicy
     }
 }

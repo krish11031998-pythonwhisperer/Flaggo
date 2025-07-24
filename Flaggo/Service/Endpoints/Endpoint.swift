@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-public protocol Endpoint {
+ protocol Endpoint {
     var host: String { get }
     var path: String { get }
     var urlScheme: String { get }
@@ -17,7 +17,7 @@ public protocol Endpoint {
     var urlCachePolicy: URLRequest.CachePolicy { get }
 }
 
-public extension Endpoint {
+ extension Endpoint {
     
     var url: URL? {
         var urlComponents = URLComponents()
@@ -37,14 +37,14 @@ public extension Endpoint {
     
     func fetchRequest<T: Decodable>() async throws -> T {
         guard let urlRequest else {
-            throw URLError(.badURL)
+            throw NetworkError.badUrl
         }
         
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
         
         guard let httpResponse = response as? HTTPURLResponse,
               200..<300 ~= httpResponse.statusCode else {
-            throw URLError(.badServerResponse)
+            throw NetworkError.badResponse
         }
         
         do {

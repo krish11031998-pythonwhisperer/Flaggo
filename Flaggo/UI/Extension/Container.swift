@@ -31,7 +31,7 @@ internal struct Container: ViewModifier {
     }
 }
 
-public extension View {
+ extension View {
     func container(cornerRadius: CGFloat = 12) -> some View {
         self.modifier(Container(cornerRadius: cornerRadius))
     }

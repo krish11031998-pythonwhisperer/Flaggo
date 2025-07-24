@@ -9,13 +9,13 @@ import SwiftUI
 import KKit
 import Kingfisher
 
-public struct CountryFlagView: ConfigurableView {
+ struct CountryFlagView: ConfigurableView {
     
-    public struct Model: Hashable {
+     struct Model: Hashable {
         let imagePath: String
         let name: String
         
-        public init(imagePath: String, name: String) {
+         init(imagePath: String, name: String) {
             self.imagePath = imagePath
             self.name = name
         }
@@ -24,11 +24,11 @@ public struct CountryFlagView: ConfigurableView {
     @Environment(\.colorScheme) var colorScheme
     private let model: Model
     
-    public init(model: Model) {
+     init(model: Model) {
         self.model = model
     }
     
-    public var body: some View {
+     var body: some View {
         ZStack(alignment: .center) {
             KFImage(.init(string: model.imagePath))
                 .resizable()
@@ -61,7 +61,7 @@ public struct CountryFlagView: ConfigurableView {
     }
     
     // MARK: - Configurable
-    public static var viewName: String { "CountryFlagView" }
+     static var viewName: String { "CountryFlagView" }
 }
 
 @available(iOS 17.0, *)

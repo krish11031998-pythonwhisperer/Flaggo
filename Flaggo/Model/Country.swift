@@ -7,17 +7,17 @@
 
 import Foundation
 
-public struct Country: Decodable {
-    public let flags: Flag?
-    public let flag: String?
-    public let name: Name?
-    public let capital: [String]?
-    public let region: String?
-    public let subregion: String?
-    public let coatOfArms: Flag?
-    public let languages: [String:String]?
-    public let currencies: [String:Currency]?
-    public let demonyms: [String: Demonym]?
-    public let area: Double?
-    public let population: Int?
+ struct Country: Decodable {
+     let flags: Flag?
+     let flag: String?
+     let name: Name?
+     let capital: [String]?
+     let region: String?
+     let subregion: String?
+     let coatOfArms: Flag?
+     let languages: [String:String]?
+     let currencies: [String:Currency]?
+     let demonyms: [String: Demonym]?
+     let area: Double?
+     let population: Int?
 }
